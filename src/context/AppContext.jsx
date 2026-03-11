@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 export const AppContext = createContext();
 
-export const AppContextProvider = (props) => {
+export const AppContextProvider = ({ children }) => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
 
@@ -13,14 +13,13 @@ export const AppContextProvider = (props) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Ensure cookies are sent with every request
+  // Send cookies with every request
   axios.defaults.withCredentials = true;
 
+  // Check authentication
   const getAuthState = async () => {
     try {
-      const { data } = await axios.get(`${backendUrl}/api/auth/is-auth`, {
-        withCredentials: true,
-      });
+      const { data } = await axios.get(`${backendUrl}/api/auth/is-auth`);
 
       if (data.success) {
         setIsLoggedin(true);
@@ -34,11 +33,10 @@ export const AppContextProvider = (props) => {
     }
   };
 
+  // Get user data
   const getUserData = async () => {
     try {
-      const { data } = await axios.get(`${backendUrl}/api/user/data`, {
-        withCredentials: true,
-      });
+      const { data } = await axios.get(`${backendUrl}/api/user/data`);
 
       if (data.success) {
         setUserData(data.userData);
@@ -50,21 +48,17 @@ export const AppContextProvider = (props) => {
     }
   };
 
+  // Check login state when app loads
   useEffect(() => {
     getAuthState();
   }, []);
 
+  // Fetch user data if logged in
   useEffect(() => {
     if (isLoggedin) {
       getUserData();
     }
   }, [isLoggedin]);
-
-  useEffect(() => {
-    if (!loading && !isLoggedin) {
-      navigate("/login");
-    }
-  }, [loading, isLoggedin]);
 
   const value = {
     backendUrl,
@@ -78,7 +72,7 @@ export const AppContextProvider = (props) => {
 
   return (
     <AppContext.Provider value={value}>
-      {props.children}
+      {children}
     </AppContext.Provider>
   );
 };

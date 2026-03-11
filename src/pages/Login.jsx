@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const Login = () => {
-  const [state, setState] = useState("Sign Up");
+  const [state, setState] = useState("Sign Up"); // Sign Up or Login
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,13 +17,13 @@ const Login = () => {
     try {
       let data;
       if (state === "Sign Up") {
-        ({ data } = await axios.post(backendUrl + "/api/auth/register", {
+        ({ data } = await axios.post(`${backendUrl}/api/auth/register`, {
           name,
           email,
           password,
         }));
       } else {
-        ({ data } = await axios.post(backendUrl + "/api/auth/login", {
+        ({ data } = await axios.post(`${backendUrl}/api/auth/login`, {
           email,
           password,
         }));
@@ -31,7 +31,7 @@ const Login = () => {
 
       if (data.success) {
         setIsLoggedin(true);
-        await getUserData(); // make sure this also uses withCredentials
+        await getUserData();
         navigate("/");
       } else {
         toast.error(data.message);
@@ -43,12 +43,16 @@ const Login = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen px-6 sm:px-0 bg-gradient-to-br from-cyan-400 to-sky-950">
+      
+      {/* Home Logo */}
       <img
         onClick={() => navigate("/")}
         src="/home.png"
+        alt="Logo"
         className="absolute left-5 sm:left-20 top-5 w-15 sm:w-25 cursor-pointer rounded-xl"
       />
 
+      {/* Form Card */}
       <div className="bg-slate-950 p-10 rounded-lg shadow-lg w-full sm:w-96 text-indigo-300 text-sm">
         <h2 className="text-3xl font-semibold text-white text-center mb-3">
           {state === "Sign Up" ? "Create Account" : "Login"}
@@ -62,77 +66,96 @@ const Login = () => {
         <form onSubmit={onSubmitHandler}>
           {state === "Sign Up" && (
             <div className="mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]">
-              <img src="/person.png" alt="logo" className="size-6" />
+              <img src="/person.png" alt="Person Icon" className="size-6" />
               <input
-                onChange={(e) => setName(e.target.value)}
-                value={name}
-                className="bg-transparent outline-none"
                 type="text"
+                id="name"
+                name="name"
+                autoComplete="name"
                 placeholder="Full Name"
+                className="bg-transparent outline-none w-full text-white"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 required
               />
             </div>
           )}
 
           <div className="mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]">
-            <img src="/email.png" alt="mail_icon" className="size-6" />
+            <img src="/email.png" alt="Email Icon" className="size-6" />
             <input
-              onChange={(e) => setEmail(e.target.value)}
-              value={email}
-              className="bg-transparent outline-none"
               type="email"
-              placeholder="Email id"
+              id="email"
+              name="email"
+              autoComplete="email"
+              placeholder="Email ID"
+              className="bg-transparent outline-none w-full text-white"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
 
           <div className="mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]">
-            <img src="/lock.png" alt="" className="size-6" />
+            <img src="/lock.png" alt="Password Icon" className="size-6" />
             <input
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-              className="bg-transparent outline-none"
               type="password"
+              id="password"
+              name="password"
+              autoComplete={state === "Sign Up" ? "new-password" : "current-password"}
               placeholder="Password"
+              className="bg-transparent outline-none w-full text-white"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
 
-          <p
-            onClick={() => navigate("/reset-password")}
-            className="mb-4 text-indigo-500 cursor-pointer"
+        
+
+          <button
+            type="submit"
+            className="w-full py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-indigo-900 text-white font-medium cursor-pointer transform transition-transform active:scale-95"
           >
-            Forgot password?
-          </p>
-          <button className="w-full py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-indigo-900 text-white font-medium cursor-pointer  transform transition-transform active:scale-95">
             {state}
           </button>
         </form>
 
-        {state === "Sign Up" ? (
-          <p className="text-gray-400 text-center text-xs mt-4">
-            Already have an account?{" "}
-            <span
-              onClick={() => setState("Login")}
-              className="text-blue-400 underline cursor-pointer"
-            >
-              Login here
-            </span>
-          </p>
-        ) : (
-          <p className="text-gray-400 text-center text-xs mt-4">
-            Don't have an account?{" "}
-            <span
-              onClick={() => setState("Sign Up")}
-              className="text-blue-400 underline cursor-pointer"
-            >
-              Sign up
-            </span>
-          </p>
-        )}
+        {/* Switch between Login / Sign Up */}
+        <p className="text-gray-400 text-center text-xs mt-4">
+          {state === "Sign Up"
+            ? (
+              <>Already have an account?{" "}
+                <span
+                  onClick={() => setState("Login")}
+                  className="text-blue-400 underline cursor-pointer"
+                >
+                  Login here
+                </span>
+              </>
+            )
+            : (
+              <>Don't have an account?{" "}
+                <span
+                  onClick={() => setState("Sign Up")}
+                  className="text-blue-400 underline cursor-pointer"
+                >
+                  Sign up
+                </span>
+              </>
+            )
+          }
+        </p>
+          <div className="flex  justify-center mt-5 hover:text-blue-500">
+            <button
+            onClick={() => navigate("/reset-password")}
+           
+          >
+            Forgot password?
+          </button>
+          </div>
       </div>
     </div>
   );
 };
-
 export default Login;

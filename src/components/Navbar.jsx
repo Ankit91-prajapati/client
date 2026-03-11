@@ -6,12 +6,12 @@ import { toast } from "react-toastify";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { userData, backendUrl, setUserData, setIsLoggedin} =
+  const { userData, backendUrl, setUserData, setIsLoggedin } =
     useContext(AppContext);
 
   const sendVerificationOtp = async () => {
     try {
-       axios.defaults.withCredentials = true;
+      axios.defaults.withCredentials = true;
       const { data } = await axios.post(
         backendUrl + "/api/auth/send-verify-otp"
       );
@@ -41,16 +41,18 @@ const Navbar = () => {
 
   return (
     <div className="w-full flex justify-between items-center p-4 sm:p-6 sm:px-24 absolute top-0">
-     
       {userData ? (
-        <div className="w-8 h-8 flex justify-center items-center rounded-full bg-black text-white relative group">
-          {userData.name[0].toUpperCase()}
-          <div className="absolute hidden group-hover:block top-0 right-0 z-10 text-black rounded pt-10">
-            <ul className="list-none m-0 p-2 bg-gray-100 text-sm">
+        <div className="w-20 h-9 flex justify-center items-center rounded-full bg-white text-black shadow-md relative group cursor-pointer">
+          <h1 className="font-semibold text-black">
+            {userData?.name}
+          </h1>
+
+          <div className="absolute hidden group-hover:block top-0 right-0 z-10 text-black pt-12">
+            <ul className="list-none m-0 p-2 bg-white text-sm rounded-lg shadow-lg border min-w-[140px]">
               {!userData.isAccountVerified && (
                 <li
                   onClick={sendVerificationOtp}
-                  className="py-1 px-2 hover:bg-gray-400 cursor-pointer "
+                  className="py-2 px-3 hover:bg-gray-100 cursor-pointer rounded"
                 >
                   Verify email
                 </li>
@@ -58,7 +60,7 @@ const Navbar = () => {
 
               <li
                 onClick={logout}
-                className="py-1 px-2 hover:bg-gray-400 cursor-pointer pr-10"
+                className="py-2 px-3 hover:bg-gray-100 cursor-pointer rounded text-red-500"
               >
                 Logout
               </li>
@@ -70,7 +72,7 @@ const Navbar = () => {
           onClick={() => navigate("/login")}
           className="flex items-center gap-2 border border-gray-500 rounded-full px-6 py-2 text-gray-800 hover:bg-gray-100 transition-all"
         >
-          Login <img src='/person.png' alt="" className='size-6' />
+          Login <img src="/person.png" alt="" className="size-6" />
         </button>
       )}
     </div>
