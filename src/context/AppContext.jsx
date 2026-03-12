@@ -54,11 +54,14 @@ export const AppContextProvider = ({ children }) => {
   }, []);
 
   // Fetch user data if logged in
+  
   useEffect(() => {
     if (isLoggedin) {
       getUserData();
     }
   }, [isLoggedin]);
+
+  
 
   const value = {
     backendUrl,

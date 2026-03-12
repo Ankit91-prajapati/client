@@ -157,7 +157,7 @@ const ResetPassword = () => {
                   onInput={(e) => handleInput(e, index)}
                   onKeyDown={(e) => handleKeyDown(e, index)}
                   required
-                  className="w-12 h-12 bg-[#333A5C] text-white text-center text-lg rounded-md"
+                  className="w-10 h-10 bg-[#333A5C] text-white text-center text-lg rounded-md"
                 />
               ))}
           </div>
